@@ -9,7 +9,7 @@
 
 ## How to configure before running the apps
 
-1. Change the config.R file with the path to the biom file and the metadata details:
+1. Change the common/config.R file with the path to the biom file and the metadata details file:
 
 biom_file <- "path_to_your_biom"
 
