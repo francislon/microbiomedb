@@ -4,7 +4,13 @@ SampleClass <- R6Class("SampleClass",
         quantitative_metadata = NULL,
         qualitative_metadata = NULL,
         sample_names = NULL,
-        is_eupath = NULL
+        is_eupath = NULL,
+        
+        # TODO: improve design
+        formatted_categories = NULL,
+        clean_categories = NULL,
+        count_categories = NULL
+        
       ),
       public = list(
         sample_dt = NULL,
@@ -82,7 +88,6 @@ SampleClass <- R6Class("SampleClass",
         },
 
         get_filtered_categories = function(){
-          filtered_categories<-NULL
           if(private$is_eupath){
             setkey(self$sample_dt, Property)
             columns <- unique(self$sample_dt[,Property])
@@ -95,12 +100,13 @@ SampleClass <- R6Class("SampleClass",
               }
               if(length(levels(unique_factors)) > 1){
                 new_columns <- paste0(columns[i], " (",length(levels(unique_factors)), ")")
-                filtered_categories[[new_columns]] <- columns[i]
+                private$formatted_categories[[new_columns]] <- columns[i]
               }
             }
             setkey(self$sample_dt, NULL)
           }else{
             columns <- colnames(private$dcast_sample_dt)[2:length(private$dcast_sample_dt)]
+            # private$clean_categories<-c(NULL, length(columns))
             for(i in 1:length(columns)){
               if(columns[i] %chin% private$quantitative_metadata){
                 unique_factors <- as.factor(as.numeric(private$dcast_sample_dt[[columns[i]]]))
@@ -109,11 +115,26 @@ SampleClass <- R6Class("SampleClass",
               }
               if(length(levels(unique_factors)) > 1){
                 new_columns <- paste0(columns[i], " (",length(levels(unique_factors)), ")")
-                filtered_categories[[new_columns]] <- columns[i]
+                # private$clean_categories[[columns[i]]]<-length(levels(unique_factors))
+                private$clean_categories[[new_columns]]<-length(levels(unique_factors))
+                private$formatted_categories[[new_columns]] <- columns[i]
+                
               }
             }
           }
-          filtered_categories
+          private$formatted_categories
+        },
+        get_count_category = function(category = NULL){
+          if(is.null(private$clean_categories)){
+            self$get_filtered_categories()
+          }
+          if(is.null(category)){
+            private$clean_categories
+          }else{
+            private$clean_categories[[category]]
+          }
         }
+        
+        
       )
 )

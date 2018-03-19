@@ -2,7 +2,6 @@
 library(shiny)
 library(data.table)
 library(ggplot2)
-# library(plotly)
 source("../common/ggplot_ext/eupath_default.R")
 source("../common/tooltip/abundance_tt.R")
 source("../common/mbiome/mbiome-reader.R")
@@ -31,16 +30,7 @@ shinyServer(function(input, output, session) {
 
   load_microbiome_data <- reactive({
     if(is.null(mstudy_obj)){
-
-      # abundance_file <- "MicrobiomeSampleByMetadata_TaxaRelativeAbundance.txt"
-      # sample_file <- "MicrobiomeSampleByMetadata_Characteristics.txt"
-      # 
-      # mstudy_obj <<- import.eupath(
-      #   taxa_abundance_path = abundance_file,
-      #   sample_path = sample_file,
-      #   aggregate_by = input$taxonLevel
-      # )
-      print(biom_file)
+      
       mstudy_obj <<- import.biom(biom_file, metadata_details, aggregate_by = input$taxonLevel)
       
       mstats <<- MicrobiomeStats$new(mstudy_obj)

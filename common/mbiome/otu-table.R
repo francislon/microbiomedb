@@ -72,11 +72,14 @@ OTUClass <- R6Class("OTUClass",
         length(private$sample_names)
       },
       
-      get_sample_as_column_by_otu = function(){
+      get_sample_as_column_by_otu = function(taxonomy_level = NULL){
+        if(!is.null(taxonomy_level) & !identical(taxonomy_level, private$last_taxonomy)){
+          self$reshape(taxonomy_level = taxonomy_level)
+        }
         selected_levels<-get_columns_taxonomy(private$last_taxonomy)
         formula_dcast <- paste(selected_levels, collapse ='+')
         formula_dcast <- paste0(formula_dcast, "~", "SampleName")
-        dcast(data = private$summarized_otu,formula = as.formula(formula_dcast),fun.aggregate = sum,value.var = "Abundance")
+        dcast(data = private$summarized_otu,formula = as.formula(formula_dcast),fun.aggregate = sum, fill=0,value.var = "Abundance")
       },
       
       get_otu_by_sample = function(sample_name, taxonomy_level = NULL){
