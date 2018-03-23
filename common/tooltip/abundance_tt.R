@@ -5,10 +5,10 @@ get_sample_from_action <- function(ggplot_object, action){
   
   if("CoordFlip" %in% class(ggplot_object$coordinates)){
     x_<-ifelse(x_is_disc, round(action$y), action$y)
-    y_<-ifelse(y_is_disc, round(àction$x), action$x)
+    y_<-ifelse(y_is_disc, round(action$x), action$x)
   }else{
     x_<-ifelse(x_is_disc, round(action$x), action$x)
-    y_<-ifelse(y_is_disc, round(àction$y), action$y)
+    y_<-ifelse(y_is_disc, round(action$y), action$y)
   }
   
   if(nrow(gg_bld_obj$layout$panel_layout)==1){
